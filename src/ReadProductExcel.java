@@ -9,37 +9,70 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 
 public class ReadProductExcel {
-    public User[] readExcel(InputStream in) {
-        User users[] = null;
+    public Product getProductById(String id, InputStream in) {
+
         try {
             XSSFWorkbook xw = new XSSFWorkbook(in);
             XSSFSheet xs = xw.getSheetAt(0);
-            users = new User[xs.getLastRowNum()];
+
             for (int j = 1; j <= xs.getLastRowNum(); j++) {
                 XSSFRow row = xs.getRow(j);
-                User user = new User();//每循环一次就把电子表格的一行的数据给对象赋值
+                Product product = new Product();//每循环一次就把电子表格的一行的数据给对象赋值
                 for (int k = 0; k <= row.getLastCellNum(); k++) {
                     XSSFCell cell = row.getCell(k);
                     if (cell == null)
                         continue;
                     if (k == 0) {
-                        user.setUsername(this.getValue(cell));//给username属性赋值
+                        product.setpId (this.getValue(cell));//给username属性赋值
                     } else if (k == 1) {
-                        user.setPassword(this.getValue(cell));//给password属性赋值
+                        product.setpName(this.getValue(cell));//给password属性赋值
                     } else if (k == 2) {
-                        user.setAddress(this.getValue(cell));//给address属性赋值
+                        product.setPrice(this.getValue(cell));//给address属性赋值
                     } else if (k == 3) {
-                        user.setPhone(this.getValue(cell));//给phone属性赋值
+                        product.setpDesc(this.getValue(cell));//给phone属性赋值
                     }
                 }
-                users[j-1] = user;
+                if(id.equals(product.getpId()))  return product;
+
+
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return users;
+        return null;
     }
 
+    public Product [] getAllProduct(InputStream in) {
+        Product products[] = null;
+        try {
+            XSSFWorkbook xw = new XSSFWorkbook(in);
+            XSSFSheet xs = xw.getSheetAt(0);
+            products = new Product[xs.getLastRowNum()];
+            for (int j = 1; j <= xs.getLastRowNum(); j++) {
+                XSSFRow row = xs.getRow(j);
+                Product product = new Product();//每循环一次就把电子表格的一行的数据给对象赋值
+                for (int k = 0; k <= row.getLastCellNum(); k++) {
+                    XSSFCell cell = row.getCell(k);
+                    if (cell == null)
+                        continue;
+                    if (k == 0) {
+                        product.setpId(this.getValue(cell));//
+                    } else if (k == 1) {
+                        product.setpName(this.getValue(cell));//
+                    } else if (k == 2) {
+                        product.setPrice(this.getValue(cell));//
+                    } else if (k == 3) {
+                        product.setpDesc(this.getValue(cell));//
+                    }
+                }
+                products[j-1] = product;
+            }
+
+        }catch (IOException e) {
+            e.printStackTrace();
+        }
+        return products;
+    }
     private String getValue(XSSFCell cell) {
         String value;
         CellType type = cell.getCellTypeEnum();
@@ -56,7 +89,7 @@ public class ReadProductExcel {
                 break;
             case NUMERIC:
                 value = df.format(cell.getNumericCellValue());//double和一个空字符串相连接，最终得到字符串
-                System.out.println("转换后的："+value);
+
                 break;
             case FORMULA:
                 value = cell.getCellFormula();
@@ -70,4 +103,4 @@ public class ReadProductExcel {
         }
         return value;
     }
-} 
+}
