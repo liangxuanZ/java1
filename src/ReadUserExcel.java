@@ -11,7 +11,7 @@ import java.io.InputStream;
 import java.text.DecimalFormat;
 
 public class ReadUserExcel {
-    public User[] readExcel(InputStream in) {
+    public User[] getAllUser(InputStream in) {
         User users[] = null;
         try {
             XSSFWorkbook xw = new XSSFWorkbook(in);
@@ -34,7 +34,7 @@ public class ReadUserExcel {
                         user.setPhone(this.getValue(cell));//给phone属性赋值
                     }
                 }
-                users[j-1] = user;
+                users[j - 1] = user;
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class ReadUserExcel {
     private String getValue(XSSFCell cell) {
         String value;
         CellType type = cell.getCellTypeEnum();
-        DecimalFormat df = new DecimalFormat("#");
+
         switch (type) {
             case STRING:
                 value = cell.getStringCellValue();
@@ -57,8 +57,11 @@ public class ReadUserExcel {
                 value = cell.getBooleanCellValue() + "";
                 break;
             case NUMERIC:
-                value = df.format(cell.getNumericCellValue());//double和一个空字符串相连接，最终得到字符串
-
+                /*
+                解决Excel的Cell中是纯数字问题
+                 */
+                DecimalFormat df = new DecimalFormat("#");
+                value = df.format(cell.getNumericCellValue());
                 break;
             case FORMULA:
                 value = cell.getCellFormula();
