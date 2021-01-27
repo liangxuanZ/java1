@@ -6,7 +6,7 @@ public class Order {
     依据：数据库有哪些字段，那么类就有哪些属性
      */
     private User user;
-    private Product product;
+    private Product products[];
     private int ammount;
     private float totalPay;
     private float actualPay;
@@ -20,12 +20,12 @@ public class Order {
         this.user = user;
     }
 
-    public Product getProduct() {
-        return product;
+    public Product[] getProducts() {
+        return products;
     }
 
-    public void setProduct(Product product) {
-        this.product = product;
+    public void setProducts(Product[] products) {
+        this.products = products;
     }
 
     public int getAmmount() {

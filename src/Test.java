@@ -33,7 +33,7 @@ public class Test {
                         if (choose == 1) {
                             viewCarts();
                         } else if (choose == 2) {
-                            shopping(sc);
+                            shopping(sc);//购物
                         } else if (choose == 3) {
                             /*
                             1、产生订单（必须有订单类）
@@ -41,9 +41,22 @@ public class Test {
                             3、把购物车里的商品写入Order.xlsx文件
                              */
                             Order order = new Order();
-                            order.setUser(users[i]);
-                            //order.setProduct();
-                            //如何关联订单和商品
+                            order.setUser(users[i]);//订单关联用户
+                            Product products[]=new Product[count];
+                            int num=0;
+                            /*
+                            实际买了2个商品，怎样把carts中的2个Product对象放入products
+                             */
+                            for(int j=0;j<carts.length;j++){
+                                if(carts[j]!=null){
+                                    products[j]=carts[j];
+                                }
+                            }
+                            order.setProducts(products);//订单关联商品：实际上应该进行处理，把数组中为null的去除
+                            //下订单（创建Excel）
+
+                            CreateOrder.createOrder(order);
+
                         } else if (choose == 4) {
                             break;//最终导致循环结束，循环结束后，main方法结束（main线程），JavaVM也会结束
                         }
