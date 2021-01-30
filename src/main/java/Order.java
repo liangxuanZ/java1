@@ -1,4 +1,5 @@
 import java.sql.Date;
+import java.util.Map;
 
 public class Order {
     /*
@@ -7,9 +8,10 @@ public class Order {
      */
     private User user;
     private Product products[];
-    private int ammount;
-    private float totalPay;
-    private float actualPay;
+    private Map<Integer,Integer> ammount;//无法表达出买了几个哪种商品
+    //商品，个数
+    private Map<Integer,Float> totalAmountPerProduct;
+    private float actualPay;//实付款
     private Date orderDate;
 
     public User getUser() {
@@ -28,21 +30,22 @@ public class Order {
         this.products = products;
     }
 
-    public int getAmmount() {
+    public Map<Integer,Integer> getAmmount() {
         return ammount;
     }
 
-    public void setAmmount(int ammount) {
+    public void setAmmount(Map<Integer,Integer> ammount) {
         this.ammount = ammount;
     }
 
-    public float getTotalPay() {
-        return totalPay;
+    public Map<Integer, Float> getTotalAmountPerProduct() {
+        return totalAmountPerProduct;
     }
 
-    public void setTotalPay(float totalPay) {
-        this.totalPay = totalPay;
+    public void setTotalAmountPerProduct(Map<Integer, Float> totalAmountPerProduct) {
+        this.totalAmountPerProduct = totalAmountPerProduct;
     }
+
 
     public float getActualPay() {
         return actualPay;
