@@ -6,14 +6,19 @@ import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.FillPatternType;
 import org.apache.poi.ss.usermodel.IndexedColors;
 
+import java.io.File;
 import java.io.FileOutputStream;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 
 public class CreateOrder {
     /**
      * Excel 文件要存放的位置，假定在F盘下
      */
-    public static String outputFile = "F:\\Orders.xls";
+    public static String outputFile = System.getProperty("user.dir") + File.separator + "Orders.xls";
+    //System.getProperty("user.dir") + File.separator + "Orders.xls"
 
     public static void createOrder(Order order) {
         try {
@@ -49,12 +54,25 @@ public class CreateOrder {
                 HSSFRow row = sheet.createRow((short) i + 1);
                 for (int j = 0; j < 6; j++) {
                     HSSFCell cell = row.createCell((short) j);
+                    int pId = Integer.parseInt(order.getProducts()[i].getId());
                     // 在单元格中输入一些内容
                     if (j == 0) {
                         cell.setCellValue(order.getUser().getUsername());
                         //cell.setCellStyle(style);//设置背景色
                     } else if (j == 1) {
-                        cell.setCellValue(order.getProducts()[i].getId());
+                        cell.setCellValue(pId);
+                    } else if (j == 2) {
+                        /*
+                        遍历Map
+                         */
+                        // 目录(key)内容(value)
+                        Map<Integer, Integer> ammount = order.getAmmount();
+                        int productNum = ammount.get(pId);
+                        cell.setCellValue(productNum);
+                    } else if (j == 3) {
+                        Map<Integer, Float> totalAmountPerProduct = order.getTotalAmountPerProduct();
+                        float productTotalPay = totalAmountPerProduct.get(pId);
+                        cell.setCellValue(productTotalPay);
                     }
                 }
             }
