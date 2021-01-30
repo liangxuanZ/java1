@@ -1,13 +1,16 @@
-import javafx.scene.control.Tab;
-
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 public class Test {
     static Product carts[] = new Product[3];//创建购物车（用数组模拟）
     static int count = 0;
 
+    static Map<Integer,Integer> ammount=new HashMap<Integer,Integer>();
+    static Map<Integer,Float> totalAmountPerProduct=new HashMap<Integer,Float>();
     public static void main(String[] args) throws ClassNotFoundException {
+
         boolean bool = true;
         while (bool) {
             System.out.println("请输入用户名：");
@@ -54,7 +57,13 @@ public class Test {
                             }
                             order.setProducts(products);//订单关联商品：实际上应该进行处理，把数组中为null的去除
                             //下订单（创建Excel）
-
+                            order.setAmmount(ammount);//关联购买数量
+                            for(Product product:products){
+                                //如何拿到哪个商品的购买数量
+                                int cou=ammount.get(Integer.parseInt(product.getId()));//多态：向上转型
+                                totalAmountPerProduct.put(Integer.parseInt(product.getId()),product.getPrice()*cou);
+                            }
+                            order.setTotalAmountPerProduct(totalAmountPerProduct);//关联每个商品的总价
                             CreateOrder.createOrder(order);
 
                         } else if (choose == 4) {
@@ -80,6 +89,11 @@ public class Test {
         }
     }
 
+    /**
+     * 购物
+     * @param sc
+     * @throws ClassNotFoundException
+     */
     public static void shopping(Scanner sc) throws ClassNotFoundException {
         InputStream inPro = Class.forName("Test").getResourceAsStream("/product.xlsx");//  /表示的就是classpath
         ReadProductExcel readProductExcel = new ReadProductExcel();
@@ -93,8 +107,15 @@ public class Test {
         /*
         遍历数组
          */
-        System.out.println("请输入商品ID，把该商品加入购物车：");
-        String pId = sc.next();
+        System.out.println("请输入商品ID以及购买数量，商品ID和数量用逗号隔开，例：1111,4，把该商品加入购物车：");
+        String pInfo=sc.next();
+        String str[]=pInfo.split(",");
+
+        String pId = str[0];//商品ID
+        String num=str[1];//购买数量
+
+        ammount.put(Integer.parseInt(pId),Integer.parseInt(num));
+
         ReadProductExcel readProductExcel1 = new ReadProductExcel();
         inPro = null;
         inPro = Class.forName("Test").getResourceAsStream("/product.xlsx");//  /表示的就是classpath
